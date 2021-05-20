@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eurekaservice
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eurekaservice
+  template:
+    metadata:
+      name: eurekaservice
+      labels:
+        app: eurekaservice
+    spec:
+      containers:
+        - name: eurekaservice
+          image: miptuser/eurekaservice
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8761
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka
+spec:
+  ports:
+    - port: 8761
+      targetPort: 8761
+  selector:
+    app: eurekaservice
+  type: ClusterIP
